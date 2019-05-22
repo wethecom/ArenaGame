@@ -35,22 +35,25 @@ public class GameMode : GameModeBehavior
         {
             MainThreadManager.Run(() =>
             {
-                NetworkObject networkObjectToDestroy = null;
-                //Loop through all players and find the player who disconnected
+                //Loop through all players and find the player who disconnected, store all it's networkobjects to a list
+                List<NetworkObject> toDelete = new List<NetworkObject>();
                 foreach (var no in sender.NetworkObjectList)
                 {
                     if (no.Owner == player)
                     {
                         //Found him
-                        networkObjectToDestroy = no;                        
+                        toDelete.Add(no);
                     }
                 }
 
                 //Remove the actual network object outside of the foreach loop, as we would modify the collection at runtime elsewise. (could also use a return, too late)
-                if (networkObjectToDestroy != null)
+                if (toDelete.Count > 0)
                 {
-                    sender.NetworkObjectList.Remove(networkObjectToDestroy);
-                    networkObjectToDestroy.Destroy();
+                    foreach (var no in toDelete)
+                    {
+                        sender.NetworkObjectList.Remove(no);
+                        no.Destroy();
+                    }
                 }
             });
         };
