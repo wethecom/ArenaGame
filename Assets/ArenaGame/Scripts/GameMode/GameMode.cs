@@ -49,10 +49,10 @@ public class GameMode : GameModeBehavior
                 //Remove the actual network object outside of the foreach loop, as we would modify the collection at runtime elsewise. (could also use a return, too late)
                 if (toDelete.Count > 0)
                 {
-                    foreach (var no in toDelete)
+                    for (int i = toDelete.Count - 1; i >= 0; i--)
                     {
-                        sender.NetworkObjectList.Remove(no);
-                        no.Destroy();
+                        sender.NetworkObjectList.Remove(toDelete[i]);
+                        toDelete[i].Destroy();
                     }
                 }
             });
